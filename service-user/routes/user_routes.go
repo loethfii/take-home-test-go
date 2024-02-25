@@ -63,6 +63,13 @@ func (r *userRoutes) RegisterUser(ctx *fiber.Ctx) error {
 	
 	userRes, err := r.userService.Register(userRequest)
 	if err != nil {
+		if err.Error() == "email already exist" {
+			return ctx.Status(fiber.StatusConflict).JSON(dto.ResponseError{
+				Code:    409,
+				Status:  "Conflict",
+				Message: err.Error(),
+			})
+		}
 		return ctx.Status(fiber.StatusInternalServerError).JSON(dto.ResponseError{
 			Code:    500,
 			Status:  "Internal Server Error",
@@ -101,6 +108,13 @@ func (r *userRoutes) LoginUser(ctx *fiber.Ctx) error {
 	
 	user, err := r.userService.Login(requestUser)
 	if err != nil {
+		if err.Error() == "email or password is incorrect" {
+			return ctx.Status(fiber.StatusForbidden).JSON(dto.ResponseError{
+				Code:    403,
+				Status:  "Forbidden",
+				Message: err.Error(),
+			})
+		}
 		return ctx.Status(fiber.StatusInternalServerError).JSON(dto.ResponseError{
 			Code:    500,
 			Status:  "Internal Server Error",

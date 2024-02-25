@@ -28,11 +28,11 @@ var userURI = "http://user:3001"
 // @Tags			User
 // @Success			200 {object} dto.UserResponseLogin{}
 // @Router			/login [post]
-func (u *userService) Login(userBody dto.UserRequest) (dto.UserResponseLogin, error) {
+func (u *userService) Login(userBody dto.UserRequest) (map[string]any, error) {
 	userData, _ := json.Marshal(userBody)
 	req, err := http.NewRequest("POST", userURI+"/api/v1/user/login", bytes.NewBuffer(userData))
 	if err != nil {
-		return dto.UserResponseLogin{}, err
+		return nil, err
 	}
 	
 	req.Header.Set("Content-Type", "application/json")
@@ -41,22 +41,41 @@ func (u *userService) Login(userBody dto.UserRequest) (dto.UserResponseLogin, er
 	
 	resp, err := client.Do(req)
 	if err != nil {
-		return dto.UserResponseLogin{}, err
+		return nil, err
 	}
 	
 	defer resp.Body.Close()
 	
 	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return dto.UserResponseLogin{}, err
+		return nil, err
 	}
 	
-	var user dto.UserResponseLogin
+	var user map[string]any
 	if err = json.Unmarshal(responseBody, &user); err != nil {
-		return dto.UserResponseLogin{}, err
+		return nil, err
 	}
 	
-	return user, nil
+	msg, _ := user["message"].(string)
+	code, _ := user["code"]
+	status, _ := user["status"].(string)
+	data, _ := user["data"]
+	access_token, _ := user["access_token"].(string)
+	
+	if msg == "" {
+		return map[string]any{
+			"code":         code,
+			"status":       status,
+			"access_token": access_token,
+			"data":         data,
+		}, nil
+	}
+	
+	return map[string]any{
+		"code":    code,
+		"status":  status,
+		"message": msg,
+	}, nil
 }
 
 // CreateTags		godoc

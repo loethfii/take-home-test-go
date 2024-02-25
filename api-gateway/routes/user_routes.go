@@ -49,7 +49,13 @@ func (r *userRoutes) Login(ctx *fiber.Ctx) error {
 		})
 	}
 	
+	msg, _ := loginResponse["message"]
+	if msg == "email or password is incorrect" {
+		return ctx.Status(fiber.StatusForbidden).JSON(loginResponse)
+	}
+	
 	return ctx.Status(fiber.StatusOK).JSON(loginResponse)
+	
 }
 
 func (r *userRoutes) Register(ctx *fiber.Ctx) error {
@@ -81,6 +87,12 @@ func (r *userRoutes) Register(ctx *fiber.Ctx) error {
 			"Status":  "Internal Server Error kontol",
 			"Message": err.Error(),
 		})
+	}
+	
+	msg, _ := registerResponse["message"]
+	
+	if msg == "email already exist" {
+		return ctx.Status(fiber.StatusConflict).JSON(registerResponse)
 	}
 	
 	return ctx.Status(fiber.StatusOK).JSON(registerResponse)
