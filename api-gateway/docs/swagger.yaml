@@ -1,0 +1,149 @@
+basePath: /api/v1
+definitions:
+  dto.EmployeeRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  dto.EmployeeResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      status:
+        type: string
+    type: object
+  dto.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+    type: object
+  dto.UserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.UserResponseLogin:
+    properties:
+      access_token:
+        type: string
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/dto.User'
+      status:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: Api Gateway with fiber, part of service user & service employee with
+    postgresql
+  title: Api Gateway | service user & service employee
+  version: 1.0.0
+paths:
+  /employees:
+    get:
+      description: Return list of employee.
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: obejct
+      security:
+      - ApiKeyAuth: []
+      summary: Get All employee.
+      tags:
+      - Employee
+    post:
+      description: Save employee into Db.
+      parameters:
+      - description: request body to add employee
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EmployeeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EmployeeResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add employee
+      tags:
+      - Employee
+  /employees/{id}:
+    get:
+      description: Return one of employee.
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EmployeeResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find detail employee.
+      tags:
+      - Employee
+  /login:
+    post:
+      description: Authentication user for access fitur.
+      parameters:
+      - description: request body for login user
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponseLogin'
+      summary: Login user.
+      tags:
+      - User
+  /register:
+    post:
+      description: Registe user for new user.
+      parameters:
+      - description: request body for register user
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponseLogin'
+      summary: Registe user.
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: access_token
+    type: apiKey
+swagger: "2.0"

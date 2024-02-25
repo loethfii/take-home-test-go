@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  go_db_service_user:
+    #    container_name: go_db_service_user
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: service-user
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_user:/var/lib/postgresql/data
+
+  go_db_service_employee:
+      #    container_name: go_db_service_employee
+      image: postgres:12
+      environment:
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_DB: service-employee
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata_employee:/var/lib/postgresql/data
+
+  user:
+    build:
+      context: ./service-user
+      dockerfile: dockerfile
+    environment:
+      #      DATABASE_URL: "host=go_db_service_user port=5432 user=postgres dbname=service-user password=root sslmode=disable"
+      DSN: "host=go_db_service_user port=5432 user=postgres dbname=service-user password=postgres sslmode=disable"
+    ports:
+      - "3001:3001"
+
+  employee:
+    build:
+      context: ./service-employee
+      dockerfile: dockerfile
+    environment:
+      DSN: "host=go_db_service_employee port=5432 user=postgres dbname=service-employee password=postgres sslmode=disable"
+    ports:
+      - "3002:3002"
+
+  gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata: {}
+  pgdata_user: {}
+  pgdata_employee: {}

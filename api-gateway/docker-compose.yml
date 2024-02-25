@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  go-api-gateway:
+    container_name: go-api-gateway
+    image: go-api-gateway/go-app
+    build: .
+#    environment:
+#      SERVICE_EMPLOYEE_PORT : "localhost:3002"
+##      DSN: "host=go_db_service_employee port=5432 user=postgres dbname=service-employee password=postgres sslmode=disable"
+##      DSN : "host=go_db_service_user port=5432 user=postgres dbname=service-user password=postgres sslmode=disable"
+    ports:
+      - "3000:3000"
+
+

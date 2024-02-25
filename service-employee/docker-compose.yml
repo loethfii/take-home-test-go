@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  go-service-employee-postgresql:
+    container_name: go-service-employee-postgresql
+    image: service-employee/go-app
+    build: .
+    environment:
+      DSN: "host=go_db_service_employee port=5432 user=postgres dbname=service-employee password=postgres sslmode=disable"
+#      DSN : "host=go_db_service_user port=5432 user=postgres dbname=service-user password=postgres sslmode=disable"
+    ports:
+      - "3002:3002"
+    depends_on:
+      - go_db_service_employee
+  go_db_service_employee:
+    container_name: go_db_service_employee
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: service-employee
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
