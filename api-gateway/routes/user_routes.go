@@ -95,5 +95,5 @@ func (r *userRoutes) Register(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusConflict).JSON(registerResponse)
 	}
 	
-	return ctx.Status(fiber.StatusOK).JSON(registerResponse)
+	return ctx.Status(fiber.StatusCreated).JSON(registerResponse)
 }

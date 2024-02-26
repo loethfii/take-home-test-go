@@ -102,8 +102,8 @@ func (r *employeeRoutes) AddEmployee(ctx *fiber.Ctx) error {
 	}
 	
 	return ctx.Status(fiber.StatusOK).JSON(dto.WebResponse{
-		Code:   200,
-		Status: "OK",
+		Code:   201,
+		Status: "created",
 		Data:   employeeRes,
 	})
 }

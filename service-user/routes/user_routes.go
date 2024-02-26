@@ -77,9 +77,9 @@ func (r *userRoutes) RegisterUser(ctx *fiber.Ctx) error {
 		})
 	}
 	
-	return ctx.Status(fiber.StatusOK).JSON(dto.WebResponse{
-		Code:   200,
-		Status: "OK",
+	return ctx.Status(fiber.StatusCreated).JSON(dto.WebResponse{
+		Code:   201,
+		Status: "created",
 		Data:   userRes,
 	})
 }

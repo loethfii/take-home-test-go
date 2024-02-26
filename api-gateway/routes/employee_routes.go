@@ -94,5 +94,5 @@ func (r *employeeRoutes) AddEmployee(ctx *fiber.Ctx) error {
 		})
 	}
 	
-	return ctx.Status(fiber.StatusOK).JSON(employeeRes)
+	return ctx.Status(fiber.StatusCreated).JSON(employeeRes)
 }
