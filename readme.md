@@ -18,7 +18,7 @@ Setelah program berjalan pengecekan api bisa dilakukan dengan postman atau mengg
 
 ### Postman
 
--- Import file `api_collection.json` pada postman lalu
+-- Import file `api_collection.json` pada postman
 
 ### Swagger
 
